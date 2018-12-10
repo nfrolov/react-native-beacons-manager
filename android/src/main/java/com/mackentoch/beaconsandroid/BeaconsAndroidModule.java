@@ -49,7 +49,11 @@ public class BeaconsAndroidModule extends ReactContextBaseJavaModule implements 
     this.mReactContext = reactContext;
     this.mApplicationContext = reactContext.getApplicationContext();
     this.mBeaconManager = BeaconManager.getInstanceForApplication(mApplicationContext);
-    // need to bind at instantiation so that service loads (to test more)
+  }
+
+  @Override
+  public void initialize() {
+    super.initialize();
     mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:0-3=4c000215,i:4-19,i:20-21,i:22-23,p:24-24"));
     bindManager();
   }
@@ -70,6 +74,12 @@ public class BeaconsAndroidModule extends ReactContextBaseJavaModule implements 
     constants.put("RUNNING_AVG_RSSI_FILTER",RUNNING_AVG_RSSI_FILTER);
     constants.put("ARMA_RSSI_FILTER",ARMA_RSSI_FILTER);
     return constants;
+  }
+
+  @Override
+  public void onCatalystInstanceDestroy() {
+    super.onCatalystInstanceDestroy();
+    unbindManager();
   }
 
   @ReactMethod
